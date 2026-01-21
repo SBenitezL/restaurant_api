@@ -360,7 +360,210 @@ Para **finalizar la atención de la mesa**
 
 ---
 
-## 11. Evolución Futura
+## 11. Diseño DDD: Bounded Contexts, Agregados, Commands y Use Cases
+
+---
+
+## 11.1 Bounded Contexts
+
+### 1️⃣ Menú Context
+
+Responsable de la definición y disponibilidad de los productos ofrecidos.
+
+**Responsabilidades:**
+
+- Gestionar categorías
+- Gestionar productos
+- Controlar disponibilidad y precios
+
+**No sabe nada de:** mesas u órdenes.
+
+---
+
+### 2️⃣ Mesa Context
+
+Responsable del estado físico del restaurante.
+
+**Responsabilidades:**
+
+- Registrar mesas
+- Controlar ocupación
+- Liberar mesas
+
+**No conoce:** detalles de productos u órdenes.
+
+---
+
+### 3️⃣ Orden Context
+
+Responsable del flujo de atención del cliente.
+
+**Responsabilidades:**
+
+- Crear y modificar órdenes
+- Controlar estados de la orden
+- Calcular totales
+
+**Depende de:** Menú (productos) y Mesa (asociación).
+
+---
+
+## 11.2 Agregados y Aggregate Roots
+
+### 🧱 Menú Context
+
+**Aggregate Root:** Category
+
+- Category
+  - id
+  - name
+  - active
+
+**Entidad:** Product
+
+- Product
+  - id
+  - name
+  - price
+  - available
+
+**Reglas de dominio:**
+
+- Un producto siempre pertenece a una categoría activa.
+- Un producto no disponible no puede ser ordenado.
+
+---
+
+### 🧱 Mesa Context
+
+**Aggregate Root:** Table
+
+- Table
+  - id
+  - number
+  - capacity
+  - status
+
+**Reglas de dominio:**
+
+- Una mesa no puede tener más de una orden activa.
+- Una mesa solo puede pasar a OCUPADA si estaba LIBRE.
+
+---
+
+### 🧱 Orden Context
+
+**Aggregate Root:** Order
+
+- Order
+  - id
+  - tableId
+  - status
+  - total
+  - items
+
+**Entidad:** OrderItem
+
+- OrderItem
+  - id
+  - productId
+  - quantity
+  - subtotal
+
+**Value Objects:**
+
+- Money
+- OrderStatus
+
+**Reglas de dominio:**
+
+- Una orden solo puede modificarse si está en estado CREADA.
+- No se pueden agregar productos no disponibles.
+- El total se calcula dentro del agregado.
+
+---
+
+## 11.3 Commands (Intención del Usuario)
+
+### Menú Context
+
+- CreateCategoryCommand
+- CreateProductCommand
+- ChangeProductAvailabilityCommand
+
+---
+
+### Mesa Context
+
+- CreateTableCommand
+- ChangeTableStatusCommand
+
+---
+
+### Orden Context
+
+- CreateOrderCommand
+- AddItemToOrderCommand
+- RemoveItemFromOrderCommand
+- ChangeOrderStatusCommand
+- CloseOrderCommand
+
+---
+
+## 11.4 Use Cases (Application Layer)
+
+### Menú Context
+
+- CreateCategoryUseCase
+- CreateProductUseCase
+- ChangeProductAvailabilityUseCase
+
+---
+
+### Mesa Context
+
+- CreateTableUseCase
+- UpdateTableStatusUseCase
+
+---
+
+### Orden Context
+
+- CreateOrderUseCase
+- AddItemToOrderUseCase
+- RemoveItemFromOrderUseCase
+- ChangeOrderStatusUseCase
+- CloseOrderUseCase
+
+---
+
+## 11.5 Flujo de Ejemplo (DDD)
+
+**Caso: Crear Orden**
+
+1. Controller recibe `CreateOrderCommand`
+2. UseCase valida mesa disponible
+3. Se crea el agregado `Order`
+4. Se cambia el estado de la mesa a OCUPADA
+5. Se persiste la orden
+
+---
+
+## 11.6 Comunicación entre Contextos
+
+- Comunicación mediante **IDs**, no entidades.
+- Validaciones cruzadas a través de **servicios de dominio**.
+- Preparado para eventos de dominio (OrderCreated, OrderClosed).
+
+---
+
+## 11.7 Conclusión
+
+Este diseño DDD separa claramente responsabilidades, protege las reglas de negocio y permite evolucionar el sistema hacia microservicios sin romper el modelo de dominio.
+
+---
+
+## 12. Evolución Futura
 
 - Integración con pagos.
 - Reportes de ventas.
@@ -369,6 +572,6 @@ Para **finalizar la atención de la mesa**
 
 ---
 
-## 12. Conclusión
+## 13. Conclusión
 
 Esta aplicación sienta las bases para un sistema de gestión de restaurante centrado en el flujo real de atención en el local, utilizando un lenguaje común entre negocio y desarrollo, facilitando la escalabilidad y el mantenimiento del sistema.
