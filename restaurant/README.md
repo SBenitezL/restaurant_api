@@ -130,7 +130,134 @@ El sistema busca reducir errores operativos, mejorar los tiempos de atención y 
 
 ---
 
-## 9. Evolución Futura
+## 9. Historias de Usuario (Listas para Jira / Trello)
+
+### EPIC: Gestión del Menú
+
+**HU-01 – Crear categoría de menú**
+Como **Administrador**
+Quiero **crear una categoría de menú**
+Para **organizar los productos ofrecidos por el restaurante**
+
+**Criterios de aceptación:**
+
+- Dado que estoy autenticado como administrador
+- Cuando registro una nueva categoría con nombre válido
+- Entonces la categoría debe quedar disponible en el menú
+
+---
+
+**HU-02 – Crear producto del menú**
+Como **Administrador**
+Quiero **registrar un producto en una categoría**
+Para **ofrecerlo a los clientes**
+
+**Criterios de aceptación:**
+
+- Dado que existe una categoría
+- Cuando registro un producto con nombre, precio y disponibilidad
+- Entonces el producto debe aparecer en el menú
+
+---
+
+### EPIC: Gestión de Mesas
+
+**HU-03 – Registrar mesa**
+Como **Administrador**
+Quiero **registrar mesas del restaurante**
+Para **controlar la ocupación del local**
+
+**Criterios de aceptación:**
+
+- Dado que soy administrador
+- Cuando registro una mesa con número y capacidad
+- Entonces la mesa debe quedar disponible con estado "Libre"
+
+---
+
+**HU-04 – Consultar estado de mesa**
+Como **Mesero**
+Quiero **ver el estado de las mesas**
+Para **saber cuáles están disponibles**
+
+**Criterios de aceptación:**
+
+- Dado que existen mesas registradas
+- Cuando consulto el listado
+- Entonces debo ver su estado actual
+
+---
+
+### EPIC: Gestión de Órdenes
+
+**HU-05 – Crear orden por mesa**
+Como **Mesero**
+Quiero **crear una orden asociada a una mesa**
+Para **registrar el pedido de los clientes**
+
+**Criterios de aceptación:**
+
+- Dado que una mesa está libre
+- Cuando creo una orden
+- Entonces la mesa pasa a estado "Ocupada"
+- Y la orden queda en estado "Creada"
+
+---
+
+**HU-06 – Agregar producto a la orden**
+Como **Mesero**
+Quiero **agregar productos a una orden abierta**
+Para **registrar completamente el pedido**
+
+**Criterios de aceptación:**
+
+- Dado que la orden está en estado "Creada"
+- Cuando agrego un producto disponible
+- Entonces el producto debe reflejarse en el detalle de la orden
+
+---
+
+**HU-07 – Modificar orden**
+Como **Mesero**
+Quiero **modificar una orden abierta**
+Para **ajustar cambios solicitados por el cliente**
+
+**Criterios de aceptación:**
+
+- Dado que la orden está abierta
+- Cuando elimino o agrego productos
+- Entonces el total de la orden debe recalcularse
+
+---
+
+**HU-08 – Cambiar estado de la orden**
+Como **Cocina o Mesero**
+Quiero **actualizar el estado de la orden**
+Para **reflejar el avance del pedido**
+
+**Criterios de aceptación:**
+
+- Dado que la orden existe
+- Cuando se cambia a "En preparación" o "Servida"
+- Entonces el nuevo estado debe guardarse correctamente
+
+---
+
+**HU-09 – Cerrar orden**
+Como **Mesero**
+Quiero **cerrar la orden**
+Para **finalizar la atención de la mesa**
+
+**Criterios de aceptación:**
+
+- Dado que la orden está servida
+- Cuando la cierro
+- Entonces la orden queda no editable
+- Y la mesa pasa a estado "Libre"
+
+---
+
+## 10. Evolución Futura
 
 - Integración con pagos.
 - Reportes de ventas.
