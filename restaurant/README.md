@@ -1,4 +1,4 @@
-# Idea de API: Sistema de Gestión de Restaurante (Consumo en Local)
+# Idea de Aplicación: Sistema de Gestión de Restaurante (Consumo en Local)
 
 ## 1. Visión General
 
@@ -257,7 +257,110 @@ Para **finalizar la atención de la mesa**
 
 ---
 
-## 10. Evolución Futura
+## 10. Backlog Técnico (API, DTOs y Entidades)
+
+### EPIC Técnico: Gestión del Menú
+
+#### API Endpoints
+
+- **POST** `/api/v1/categories`
+- **GET** `/api/v1/categories`
+- **POST** `/api/v1/products`
+- **GET** `/api/v1/products`
+- **PUT** `/api/v1/products/{id}`
+- **PATCH** `/api/v1/products/{id}/availability`
+
+#### DTOs
+
+- `CategoryRequestDTO { name }`
+- `CategoryResponseDTO { id, name, active }`
+- `ProductRequestDTO { name, price, categoryId, available }`
+- `ProductResponseDTO { id, name, price, available, category }`
+
+#### Entidades (Dominio)
+
+- **Category**
+  - id
+  - name
+  - active
+
+- **Product**
+  - id
+  - name
+  - price
+  - available
+  - category
+
+---
+
+### EPIC Técnico: Gestión de Mesas
+
+#### API Endpoints
+
+- **POST** `/api/v1/tables`
+- **GET** `/api/v1/tables`
+- **PATCH** `/api/v1/tables/{id}/status`
+
+#### DTOs
+
+- `TableRequestDTO { number, capacity }`
+- `TableResponseDTO { id, number, capacity, status }`
+
+#### Entidades (Dominio)
+
+- **Table**
+  - id
+  - number
+  - capacity
+  - status (LIBRE, OCUPADA, EN_ATENCION)
+
+---
+
+### EPIC Técnico: Gestión de Órdenes
+
+#### API Endpoints
+
+- **POST** `/api/v1/orders`
+- **GET** `/api/v1/orders/active`
+- **GET** `/api/v1/orders/{id}`
+- **POST** `/api/v1/orders/{id}/items`
+- **DELETE** `/api/v1/orders/{id}/items/{itemId}`
+- **PATCH** `/api/v1/orders/{id}/status`
+
+#### DTOs
+
+- `OrderRequestDTO { tableId }`
+- `OrderResponseDTO { id, table, status, total, items }`
+- `OrderItemRequestDTO { productId, quantity }`
+- `OrderItemResponseDTO { id, product, quantity, subtotal }`
+
+#### Entidades (Dominio)
+
+- **Order**
+  - id
+  - table
+  - status (CREADA, EN_PREPARACION, SERVIDA, CERRADA)
+  - total
+  - items
+
+- **OrderItem**
+  - id
+  - product
+  - quantity
+  - subtotal
+
+---
+
+### Consideraciones Técnicas
+
+- Arquitectura recomendada: **DDD + REST API**.
+- Validaciones de dominio dentro de las entidades (no en controladores).
+- Estados controlados mediante enums.
+- Uso de UUID para identificadores.
+
+---
+
+## 11. Evolución Futura
 
 - Integración con pagos.
 - Reportes de ventas.
@@ -266,6 +369,6 @@ Para **finalizar la atención de la mesa**
 
 ---
 
-## 10. Conclusión
+## 12. Conclusión
 
 Esta aplicación sienta las bases para un sistema de gestión de restaurante centrado en el flujo real de atención en el local, utilizando un lenguaje común entre negocio y desarrollo, facilitando la escalabilidad y el mantenimiento del sistema.
